@@ -1,0 +1,33 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nginx-config-templates
+data:
+  default.conf.template: |
+    server {
+        listen       ${NGINX_PORT} default_server;
+        listen       ${NGINX_PORT_TLS} ssl;
+        server_name  localhost;
+
+        ssl_certificate      ${NGINX_CERT_DIR}/tls.crt;
+        ssl_certificate_key  ${NGINX_CERT_DIR}/tls.key;
+        ssl_protocols        TLSv1.2 TLSv1.3;
+        ssl_ciphers          HIGH:!aNULL:!MD5;
+
+        access_log /dev/stdout;
+
+        location / {
+            root   ${NGINX_ROOT};
+            index  index.html index.htm;
+        }
+
+        error_page   404  /not_found.html;
+        location = /not_found.html {
+            root   ${NGINX_ROOT};
+        }
+
+        error_page   500 502 503 504  /50x.html;
+        location = /50x.html {
+            root   ${NGINX_ROOT};
+        }
+    }

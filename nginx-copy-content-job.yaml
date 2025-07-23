@@ -1,0 +1,28 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: nginx-copy-content-job
+spec:
+  template:
+    spec:
+      containers:
+        - name: copy-content
+          image: registry.access.redhat.com/ubi9/ubi:latest
+          command:
+            - bash
+            - -c
+            - "set -e; rm -rf /storage/html/; mkdir /storage/html; cp -Lr /content/*.html /storage/html/; chmod 755 /storage/html; chmod 0644 /storage/html/*.html; ls -al /storage/html/"
+          volumeMounts:
+            - name: content
+              mountPath: /content
+            - name: storage
+              mountPath: /storage
+      restartPolicy: Never
+      volumes:
+        - name: content
+          configMap:
+            name: nginx-content
+        - name: storage
+          persistentVolumeClaim:
+            claimName: nginx-pv-claim
+

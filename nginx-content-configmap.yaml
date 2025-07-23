@@ -1,0 +1,23 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nginx-content
+data:
+  index.html: |
+    <html>
+      <head>
+        <title>Hello world!</title>
+      </head>
+      <body>
+        <h1>Hello world!</h1>
+      </body>
+    </html>
+  not_found.html: |
+    <html>
+      <head>
+        <title>Not found</title>
+      </head>
+      <body>
+        Page not found
+      </body>
+    </html>
